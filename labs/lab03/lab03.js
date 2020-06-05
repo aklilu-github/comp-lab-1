@@ -3,25 +3,51 @@ import zlib from 'zlib';
 
 class lab03 {
 
-  syncFileRead(fs) {
+  syncFileRead(filename) {
     /* Implement function here */
+    var fs = require("fs");
+    var contents = fs.readFileSync(filename, 'UTF8');
 
+    return contents.toString();
   }
 
-  asyncFileRead(/* Insert Parameters here */) {
+  asyncFileRead(filename, callbackfunc) {
     /* Implement function here */
+    var fs = require("fs");
+    let contents;
+    fs.readFile('sample.txt', 'UTF8', function(err, contents) {
+       if (err) return console.error(err);
+          callbackfunc(contents);
+    });
   }
 
-  compressFileStream(/* Insert Parameters here */) {
+  compressFileStream(inputfile, outputfile) {
     /* Implement function here */
+    var fs = require("fs");
+    var outputStream = fs.createReadStream(inputfile)
+      .pipe(zlib.createGzip())
+      .pipe(fs.createWriteStream(outputfile));
+    return outputStream;
   }
 
-  decompressFileStream(/* Insert Parameters here */) {
+  decompressFileStream(inputfile, outputfile) {
     /* Implement function here */
+    var fs = require("fs");
+    var outputStream = fs.createReadStream(inputfile)
+      .pipe(zlib.createGunzip())
+      .pipe(fs.createWriteStream(outputfile));
+    return outputStream;
   }
 
-  listDirectoryContents(/* Insert Parameters here */) {
-    /* Implement function here */
+  listDirectoryContents(dirname, callbackfunc) {
+      /* Implement function here */
+    var fs = require("fs");
+    fs.readdir(dirname, function(err, data) {
+      if(err) {
+        return console.error(err);
+      }
+      return callbackfunc(data);
+    });
   }
 }
 
